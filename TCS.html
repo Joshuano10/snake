@@ -1,0 +1,173 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+    <title>贪吃蛇</title>
+    <link rel="stylesheet" type="text/css" href="TCS.css">
+</head>
+<body onkeydown="move(event)">
+    <div class="warpper">
+        <div id="gameArea">
+            <div id="snake">
+            </div>
+            <div id="food">
+            </div>
+        </div>
+        <div class="menu">
+            <p>得分:<span id="score">0</span></p>
+            <p class="tip">按任意方向键开始游戏，蓝色方块是蛇，红色方块是食物</p>
+        </div>
+    </div>
+    <script type="text/javascript">
+        var snake = document.getElementById("snake");
+        var food = document.getElementById("food");
+        var gameArea = document.getElementById("gameArea");
+        var score = document.getElementById("score");
+        var timer ;//移动的定时器
+        var cover = [[0,0]];//记录蛇的行踪
+        var coverLen = 0;//数组长度
+        var bodyLen = 0;//新增的长度
+        var newBody;
+        var flag = 0;//判断eat
+        var interval = 500
+        var dir;//判断方向
+
+        showFood();
+
+        function move(e){
+        var key;
+            if(window.event){ // IE
+                key = e.keyCode
+            }
+            else if(e.which){ // Netscape/Firefox/Opera
+                key = e.which
+            }
+            switch(key){
+                case 37://left
+                if(dir != "right"){
+                    clearInterval(timer);
+                    timer = setInterval("moveleft()",interval);
+                    setTimeout('dir = "left"',interval);
+                }
+                break;
+                case 38://up
+                if(dir != "down"){
+                    clearInterval(timer);
+                    timer = setInterval("moveup()",interval);
+                    setTimeout('dir = "up"',interval);
+                }
+                break;
+                case 39://right
+                if(dir != "left"){
+                    clearInterval(timer);
+                    timer = setInterval("moveright()",interval);
+                    setTimeout('dir = "right"',interval);
+                }
+                break;
+                case 40://down
+                if(dir != "up"){
+                    clearInterval(timer);
+                    timer = setInterval("movedown()",interval);
+                    setTimeout('dir = "down"',interval);
+                }
+                break;
+            }
+        }
+        function moveleft(){
+            cover.push([snake.style.left,snake.style.top]);
+            snake.style.left = snake.offsetLeft-20+"px";
+            judge();
+            coverLen++;
+        }
+        function moveup(){
+            cover.push([snake.style.left,snake.style.top]);
+            snake.style.top = snake.offsetTop-20+"px";
+            judge();
+            coverLen++;
+        }
+        function moveright(){
+            cover.push([snake.style.left,snake.style.top]);
+            snake.style.left = snake.offsetLeft+20+"px";
+            judge();
+            coverLen++;
+        }
+        function movedown(){
+            cover.push([snake.style.left,snake.style.top]);
+            snake.style.top = snake.offsetTop+20+"px";
+            judge();
+            coverLen++;
+        }
+
+        function showFood(){
+            var foodX = 20*parseInt(Math.ceil(Math.random()*23) );
+            var foodY = 20*parseInt(Math.ceil(Math.random()*19) );
+            food.style.left = foodX + "px";
+            food.style.top = foodY + "px";
+        }
+
+        function checkCrash(obj1,obj2){
+            var obj1left = obj1.offsetLeft;
+            var obj1width = obj1.offsetWidth + obj1left;
+            var obj1top = obj1.offsetTop;
+            var obj1height = obj1.offsetHeight + obj1top;
+            var obj2left = obj2.offsetLeft;
+            var obj2width = obj2.offsetWidth + obj2left;
+            var obj2top = obj2.offsetTop;
+            var obj2height = obj2.offsetHeight + obj2top;
+            if(!(obj1left>=obj2width||obj2left>=obj1width||obj1top>=obj2height||obj2top>=obj1height)){
+                flag = 1
+            }
+        }
+
+        function eat(){
+            setInterval("checkCrash(snake,food)",interval);
+            if(flag == 1){
+                newBody = document.createElement("div");
+                newBody.setAttribute("class","snakeBody");
+                gameArea.appendChild(newBody);
+                newBody.style.left = cover[bodyLen][0];
+                newBody.style.right = cover[bodyLen][1];
+                showFood();
+                bodyLen++;
+                flag = 0;
+                score.innerText = bodyLen;
+                interval-=20;
+            }
+        }
+
+        function follow(){
+            var newBodys = document.querySelectorAll(".snakeBody");
+            for(var i = 0;i<bodyLen;i++){
+                newBodys[i].style.left = cover[coverLen-i+1][0];
+                newBodys[i].style.top = cover[coverLen-i+1][1];
+            }
+        }
+
+        function out(){
+            if(snake.offsetLeft>460||snake.offsetTop>380||snake.offsetLeft<0||snake.offsetTop<0){
+                alert("gameover!  你的得分是"+bodyLen+"分");
+                window.location.reload();
+            }
+        }
+
+        function checkSelfCrash(){
+            var newBodys = document.querySelectorAll(".snakeBody");
+            for(var i = 0;i<bodyLen;i++){
+                checkCrash(snake,newBodys[i]);
+                if(flag == 1){
+                    alert("gameover!  你的得分是"+bodyLen+"分");
+                    window.location.reload();
+                    break;
+                }
+            }
+        }
+
+        function judge(){
+            eat();
+            follow();
+            out();
+            checkSelfCrash();
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,68 @@
+
+*{
+    margin:0px;
+    padding:0px;
+}
+
+.warpper{
+    border:3px solid black;
+    height:420px;
+    width:650px;
+    position:relative;
+    margin:100px auto;
+    background:#ccc;
+    padding-top: 15px;
+}
+#gameArea{
+    border:2px solid black;
+    margin:5px;
+    height:400px;
+    width:480px;
+    position:absolute;
+    background:silver;
+}
+#snake{
+    box-sizing:border-box;
+    border:1px solid white;
+    width:20px;
+    height:20px;
+    background:blue;
+    position:absolute;
+    left:80px;
+    top:60px;
+    z-index: 2;
+}
+.snakeBody{
+    box-sizing:border-box;
+    border:1px solid white;
+    width:20px;
+    height:20px;
+    background:#1299d1;
+    position:absolute;
+}
+#food{
+    box-sizing:border-box;
+    border:1px solid white;
+    height:20px;
+    width:20px;
+    background:red;
+    position:absolute;
+    z-index:1;
+}
+
+.menu{
+    font-size:30px;
+    position:absolute;
+    left:510px;
+    height:400px;
+    width:120px;
+    margin-top: 30px;
+}
+#score{
+    color:red;
+    font-size:40px;
+}
+.tip{
+    font-size:15px;
+    margin-top:20px;
+}
